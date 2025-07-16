@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Package from '@/models/Package';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest) {
   try {
     await connectDB();
 
-    const packageId = params.id;
+    // Extract the id from the URL pathname
+    const url = new URL(request.url);
+    const pathParts = url.pathname.split('/');
+    const packageId = pathParts[pathParts.length - 1];
 
     if (!packageId) {
       return NextResponse.json(
